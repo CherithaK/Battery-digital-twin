@@ -19,6 +19,10 @@ interface BMSIntelligencePanelProps {
   testId?: string;
 }
 
+function formatValue(value: number | null | undefined, decimals: number = 0): string {
+  return value != null && !isNaN(value) ? value.toFixed(decimals) : "--";
+}
+
 function OperatingEnvelopeSection({
   envelope,
 }: {
@@ -43,7 +47,7 @@ function OperatingEnvelopeSection({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Voltage Stress</span>
-            <span className="text-xs font-mono">{(envelope.voltageStressIndex * 100).toFixed(0)}%</span>
+            <span className="text-xs font-mono">{formatValue(envelope.voltageStressIndex * 100)}%</span>
           </div>
           <Progress value={envelope.voltageStressIndex * 100} className="h-2" />
         </div>
@@ -51,7 +55,7 @@ function OperatingEnvelopeSection({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Current Stress</span>
-            <span className="text-xs font-mono">{(envelope.currentStressIndex * 100).toFixed(0)}%</span>
+            <span className="text-xs font-mono">{formatValue(envelope.currentStressIndex * 100)}%</span>
           </div>
           <Progress value={envelope.currentStressIndex * 100} className="h-2" />
         </div>
@@ -59,7 +63,7 @@ function OperatingEnvelopeSection({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Polarization Risk</span>
-            <span className="text-xs font-mono">{(envelope.polarizationRisk * 100).toFixed(0)}%</span>
+            <span className="text-xs font-mono">{formatValue(envelope.polarizationRisk * 100)}%</span>
           </div>
           <Progress value={envelope.polarizationRisk * 100} className="h-2" />
         </div>
@@ -82,7 +86,7 @@ function RiskIndicatorsSection({
 }) {
   const risks = [
     { label: "Accelerated Aging", active: indicators.acceleratedAging, icon: Activity },
-    { label: "Instability Detected", active: indicators.instabilityDetected, icon: AlertTriangle },
+    { label: "Instability Indicator", active: indicators.instabilityDetected, icon: AlertTriangle },
     { label: "Kinetic Limitation", active: indicators.kineticLimitation, icon: Zap },
   ];
 
@@ -98,22 +102,17 @@ function RiskIndicatorsSection({
         {risks.map((risk) => (
           <div key={risk.label} className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <risk.icon className={cn("w-4 h-4", risk.active ? "text-red-500" : "text-muted-foreground")} />
+              <risk.icon className={cn("w-4 h-4", risk.active ? "text-amber-500" : "text-muted-foreground")} />
               <span className="text-xs">{risk.label}</span>
             </div>
             <Badge
-              variant={risk.active ? "destructive" : "secondary"}
+              variant={risk.active ? "secondary" : "outline"}
               className="text-xs"
             >
               {risk.active ? "Active" : "Clear"}
             </Badge>
           </div>
         ))}
-
-        <div className="flex items-center justify-between pt-3 border-t border-border">
-          <span className="text-xs text-muted-foreground">Confidence</span>
-          <span className="text-xs font-mono">{(indicators.confidence * 100).toFixed(0)}%</span>
-        </div>
       </CardContent>
     </Card>
   );
@@ -143,7 +142,7 @@ function HealthMarginsSection({
           <div key={item.label} className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">{item.label}</span>
-              <span className="text-xs font-mono">{(item.value * 100).toFixed(0)}%</span>
+              <span className="text-xs font-mono">{formatValue(item.value * 100)}%</span>
             </div>
             <Progress
               value={item.value * 100}
@@ -171,23 +170,33 @@ function AdaptiveInsightsSection({
     high: "text-emerald-500",
   };
 
+  const formatAdvisory = (text: string): string => {
+    const advisoryMap: Record<string, string> = {
+      "Reduce voltage sweep range": "Reducing voltage sweep range may improve stability",
+      "Lower scan rate recommended": "Lowering scan rate may improve measurement quality",
+      "Reduce cycling frequency to slow degradation": "Reducing cycling frequency may help slow degradation",
+      "Maintain current operating parameters": "Current operating parameters appear suitable",
+    };
+    return advisoryMap[text] || text;
+  };
+
   return (
     <Card className="border border-border">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-sm font-medium">
           <Lightbulb className="w-4 h-4 text-amber-500" />
-          Adaptive Advisory
+          Advisory Recommendations
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-1">
           <span className="text-xs text-muted-foreground">Optimal Operating Zone</span>
-          <p className="text-sm">{insights.optimalOperatingZone}</p>
+          <p className="text-sm">{formatAdvisory(insights.optimalOperatingZone)}</p>
         </div>
 
         <div className="space-y-1">
           <span className="text-xs text-muted-foreground">Stress Avoidance</span>
-          <p className="text-sm">{insights.stressAvoidanceHint}</p>
+          <p className="text-sm">{formatAdvisory(insights.stressAvoidanceHint)}</p>
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-border">
@@ -209,7 +218,7 @@ function HealingMetricsSection({
   const trendColors = {
     improving: "text-emerald-500",
     stable: "text-blue-500",
-    declining: "text-red-500",
+    declining: "text-amber-500",
   };
 
   return (
@@ -225,8 +234,8 @@ function HealingMetricsSection({
           <span className="text-xs text-muted-foreground">Reversible Loss</span>
           <span className="text-xs font-mono">
             {healing.reversibleLossFraction != null
-              ? `${(healing.reversibleLossFraction * 100).toFixed(1)}%`
-              : "N/A"}
+              ? `${formatValue(healing.reversibleLossFraction * 100, 1)}%`
+              : "--"}
           </span>
         </div>
 
@@ -234,8 +243,8 @@ function HealingMetricsSection({
           <span className="text-xs text-muted-foreground">Healing Efficiency</span>
           <span className="text-xs font-mono">
             {healing.healingEfficiency != null
-              ? `${(healing.healingEfficiency * 100).toFixed(1)}%`
-              : "N/A"}
+              ? `${formatValue(healing.healingEfficiency * 100, 1)}%`
+              : "--"}
           </span>
         </div>
 
@@ -247,13 +256,8 @@ function HealingMetricsSection({
               <span className="text-xs capitalize">{healing.recoveryTrend}</span>
             </div>
           ) : (
-            <span className="text-xs text-muted-foreground">N/A</span>
+            <span className="text-xs text-muted-foreground">--</span>
           )}
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">Confidence</span>
-          <span className="text-xs font-mono">{(healing.confidence * 100).toFixed(0)}%</span>
         </div>
       </CardContent>
     </Card>
@@ -265,7 +269,7 @@ export function BMSIntelligencePanel({ intelligence, testId }: BMSIntelligencePa
     return (
       <Card className="border border-border" data-testid={testId}>
         <CardContent className="flex items-center justify-center h-48 text-muted-foreground">
-          <span>Upload CV data to view BMS intelligence</span>
+          <span>Upload CV data to view BMS-inspired intelligence metrics</span>
         </CardContent>
       </Card>
     );
@@ -275,8 +279,11 @@ export function BMSIntelligencePanel({ intelligence, testId }: BMSIntelligencePa
     <div className="space-y-4" data-testid={testId}>
       <h2 className="text-lg font-medium flex items-center gap-2">
         <Activity className="w-5 h-5 text-primary" />
-        BMS Intelligence Layer
+        BMS-Inspired Intelligence Layer
       </h2>
+      <p className="text-sm text-muted-foreground -mt-2">
+        Advisory recommendations based on electrochemical analysis
+      </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <OperatingEnvelopeSection envelope={intelligence.operatingEnvelope} />
         <RiskIndicatorsSection indicators={intelligence.riskIndicators} />

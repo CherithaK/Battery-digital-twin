@@ -1,0 +1,301 @@
+Battery Health Digital Twin — Polish, Stability & Scientific Transparency
+
+Paste this exactly. Do not shorten. Do not reword.
+
+PROJECT CONTEXT (LOCK THIS FIRST)
+
+You are working on an existing project named:
+
+Battery Health Digital Twin
+
+This project is already:
+• scientifically correct
+• physics-first
+• ML-augmented
+• suitable for academic submission
+
+Your task is polish, clarification, and stability only.
+
+🚫 You must NOT:
+• redesign UI
+• modify electrochemical equations
+• modify ML models or features
+• change analysis pipelines
+• add control or actuation logic
+
+This is not a feature-addition task.
+
+🎯 OBJECTIVE
+
+Make the application:
+• presentation-safe
+• viva-safe
+• evaluator-friendly
+
+By:
+• fixing navigation behavior
+• clarifying terminology
+• reducing risky UI emphasis
+• embedding a read-only scientific reference panel
+
+1️⃣ SIDEBAR NAVIGATION — FIX & STABILIZE (CRITICAL)
+Problem
+
+Sidebar navigation is inconsistent and may lead to blank or broken views.
+
+Mandatory Fix
+
+Convert sidebar navigation into a single-page controlled view system.
+
+Rules
+
+• Do NOT use client-side routing
+• Do NOT navigate to empty pages
+• Do NOT break existing components
+
+Implementation
+
+Each sidebar item must:
+• Scroll to or toggle visibility of an existing section
+• Highlight as active when selected
+• Never produce a blank screen
+
+Exact Section Mapping
+
+Dashboard → top summary cards & gauges
+
+Electrochemical Analysis → CV voltammogram + per-cycle metrics
+
+System Diagnostics → risk indicators + stability metrics
+
+Multi-Cycle Trends → trend plots
+
+Kinetic Analysis → electrochemical kinetic parameters
+
+Insights → advisory & interpretation layer
+
+If a section is incomplete:
+• Disable click
+• Tooltip: “Section under integration”
+
+2️⃣ SIDEBAR LABEL REFINEMENT (TEXT ONLY)
+
+Change display labels only.
+Do NOT rename files, routes, or components.
+
+Sidebar and section headers must read:
+
+• Dashboard
+• Electrochemical Analysis
+• System Diagnostics
+• Multi-Cycle Trends
+• Kinetic Analysis
+• Insights
+
+3️⃣ ML CONFIDENCE — REMOVE FROM PRIMARY UI (MANDATORY)
+Rationale
+
+ML confidence is easily misunderstood and invites unnecessary scrutiny.
+It must not appear as a health-like signal.
+
+Required Changes
+
+❌ Completely remove ML confidence from:
+• dashboard cards
+• gauges
+• metric lists
+• diagnostics
+• trends
+• insights
+
+It must not appear as a number, percentage, badge, or label.
+
+Internal Handling (Keep)
+
+• ML confidence must still be computed
+• Must exist in backend data
+• May gate ML internally
+
+But it must not be visually emphasized.
+
+Watermark-Level Visibility (Optional Only)
+
+If displayed at all:
+
+• Very small text
+• Neutral gray
+• Non-clickable
+• Bottom footer or corner
+
+Allowed wording only (no numbers):
+
+Model confidence derived from data similarity.
+
+No icons.
+No percentages.
+No tooltips.
+
+4️⃣ BMS TERMINOLOGY — CONSERVATIVE & SAFE
+
+Do NOT remove BMS ideas.
+Clarify scope to avoid unsafe claims.
+
+Global wording changes:
+
+❌ Battery Management System
+✅ BMS-Inspired Intelligence Layer
+
+❌ Control action
+✅ Advisory recommendation
+
+❌ Fault detected
+✅ Risk indicator active
+
+This ensures academic and legal safety.
+
+5️⃣ INSIGHTS & ADVISORY — TONE CORRECTION
+
+All insight text must be:
+• suggestive
+• conditional
+• non-commanding
+
+Pattern to apply everywhere:
+
+❌ “Reduce voltage sweep range”
+✅ “Reducing voltage sweep range may improve stability”
+
+6️⃣ ERROR HANDLING & EMPTY STATES (MANDATORY)
+
+Rules:
+• App must load before CSV upload
+• No NaN
+• No undefined
+• No blank cards
+
+Display rule everywhere:
+
+value != null ? value.toFixed(x) : "--"
+
+
+Upload states:
+• Upload failed → clear explanation
+• No data → instructional placeholder
+• Partial cycles → warning badge, not error
+
+7️⃣ ADD READ-ONLY THEORY & MODELS REFERENCE PANEL
+Purpose
+
+Provide in-app scientific documentation for:
+• evaluators
+• viva defense
+• academic clarity
+
+This panel is read-only and does not affect analysis.
+
+Placement (Least Disruptive)
+
+Preferred:
+• New sidebar item: “Theory & Models”
+
+Fallback:
+• Header info icon (ⓘ) opening modal/drawer
+
+Do NOT block navigation.
+Do NOT introduce heavy routing.
+
+Panel Rules
+
+• Read-only
+• No inputs
+• No toggles
+• No calculations
+• No charts required
+• Text + equations only
+• Loads instantly
+• Always renders (even before CSV)
+
+CONTENT — EXACT STRUCTURE
+Section A: Electrochemical Models Used
+
+Each entry shows:
+• Equation
+• Meaning
+• Usage
+
+Include:
+
+• Randles–Ševčík equation — diffusion degradation proxy (relative trends)
+• Peak separation (ΔEp) — bounded to 300 mV
+• Reversibility index — |log(Ipa/Ipc)|
+• Butler–Volmer kinetics — charge-transfer proxy
+• Capacitive vs Faradaic current — surface effects
+• Noise power index — stability indicator
+• SEI growth model — 1–100 nm, saturating
+
+Section B: Multi-Cycle Temporal Features
+
+Brief descriptions of:
+• ΔEp slope
+• Peak current decay
+• Peak shift
+• Reversibility drift
+• Noise growth
+• Stability index
+
+Computed only when cycles are compatible.
+
+Section C: Machine Learning Models
+Philosophy
+
+“Physics governs behavior. Machine learning learns trends from physics-derived features.”
+
+Model
+
+Gradient Boosting Regressor
+
+Inputs
+
+• Physics-derived metrics
+• Temporal features
+• Cycle index
+
+Raw voltage/current are never ML inputs.
+
+Outputs
+
+• State of Health
+• Degradation rate
+• Remaining useful life proxy
+
+8️⃣ FINAL PRESENTATION SAFETY CHECK
+
+Verify before completion:
+
+✔ Sidebar never leads to blank screens
+✔ All sections have headers
+✔ No experimental language
+✔ No broken clicks
+✔ No scientific logic changed
+✔ Theory panel always loads
+
+🚨 FINAL INSTRUCTIONS
+
+Do NOT:
+• change electrochemical equations
+• modify ML pipeline
+• redesign UI
+• add new features
+• ask questions
+
+Your role is polish, clarity, and stability only.
+
+✅ SUCCESS CRITERIA
+
+The application must feel like:
+• a lab instrument dashboard
+• an academic analysis tool
+• a finished submission project
+• confident, conservative, and defensible
+
+The UI should look complete, not experimental.

@@ -1,4 +1,3 @@
-import { Link, useLocation } from "wouter";
 import {
   Sidebar,
   SidebarContent,
@@ -15,46 +14,56 @@ import {
   LayoutDashboard,
   Activity,
   AlertTriangle,
-  Settings,
   Battery,
   TrendingUp,
   Zap,
-  Info,
+  Lightbulb,
+  BookOpen,
 } from "lucide-react";
+import { useNavigation, type ActiveSection } from "@/App";
 
-const mainNavItems = [
+const mainNavItems: { title: string; section: ActiveSection; icon: typeof LayoutDashboard }[] = [
   {
     title: "Dashboard",
-    url: "/",
+    section: "dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Analysis",
-    url: "/analysis",
+    title: "Electrochemical Analysis",
+    section: "electrochemical-analysis",
     icon: Activity,
   },
   {
-    title: "Diagnostics",
-    url: "/diagnostics",
+    title: "System Diagnostics",
+    section: "system-diagnostics",
     icon: AlertTriangle,
   },
 ];
 
-const insightItems = [
+const insightItems: { title: string; section: ActiveSection; icon: typeof TrendingUp }[] = [
   {
-    title: "Trends",
-    url: "/trends",
+    title: "Multi-Cycle Trends",
+    section: "multi-cycle-trends",
     icon: TrendingUp,
   },
   {
-    title: "Kinetics",
-    url: "/kinetics",
+    title: "Kinetic Analysis",
+    section: "kinetic-analysis",
     icon: Zap,
+  },
+  {
+    title: "Insights",
+    section: "insights",
+    icon: Lightbulb,
   },
 ];
 
 export function AppSidebar() {
-  const [location] = useLocation();
+  const { activeSection, setActiveSection } = useNavigation();
+
+  const handleNavClick = (section: ActiveSection) => {
+    setActiveSection(section);
+  };
 
   return (
     <Sidebar>
@@ -65,9 +74,9 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-semibold text-sidebar-foreground">
-              Battery Health
+              Digital Twin
             </span>
-            <span className="text-xs text-muted-foreground">Digital Twin</span>
+            <span className="text-xs text-muted-foreground">Battery Health</span>
           </div>
         </div>
       </SidebarHeader>
@@ -80,21 +89,20 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNavItems.map((item) => {
-                const isActive = location === item.url;
+                const isActive = activeSection === item.section;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      asChild
+                      onClick={() => handleNavClick(item.section)}
                       className={
                         isActive
                           ? "bg-sidebar-accent text-sidebar-accent-foreground"
                           : ""
                       }
+                      data-testid={`nav-${item.section}`}
                     >
-                      <Link href={item.url} data-testid={`nav-${item.title.toLowerCase()}`}>
-                        <item.icon className="w-4 h-4" />
-                        <span>{item.title}</span>
-                      </Link>
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.title}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -110,21 +118,20 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {insightItems.map((item) => {
-                const isActive = location === item.url;
+                const isActive = activeSection === item.section;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      asChild
+                      onClick={() => handleNavClick(item.section)}
                       className={
                         isActive
                           ? "bg-sidebar-accent text-sidebar-accent-foreground"
                           : ""
                       }
+                      data-testid={`nav-${item.section}`}
                     >
-                      <Link href={item.url} data-testid={`nav-${item.title.toLowerCase()}`}>
-                        <item.icon className="w-4 h-4" />
-                        <span>{item.title}</span>
-                      </Link>
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.title}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -132,30 +139,36 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="px-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Reference
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => handleNavClick("theory-models")}
+                  className={
+                    activeSection === "theory-models"
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                      : ""
+                  }
+                  data-testid="nav-theory-models"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>Theory & Models</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-sidebar-border">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link href="/settings" data-testid="nav-settings">
-                <Settings className="w-4 h-4" />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link href="/about" data-testid="nav-about">
-                <Info className="w-4 h-4" />
-                <span>About</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <div className="mt-4 px-3">
+        <div className="px-3">
           <p className="text-xs text-muted-foreground">
-            BMS Intelligence Layer
+            BMS-Inspired Intelligence Layer
           </p>
           <p className="text-xs text-muted-foreground opacity-70">
             v1.0.0 — Research Grade

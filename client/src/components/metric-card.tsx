@@ -50,7 +50,7 @@ export function MetricCard({
                 statusColors[status]
               )}
             >
-              {typeof value === "number" ? value.toFixed(1) : value}
+              {value}
             </span>
             <span className="text-xs font-mono text-muted-foreground">
               {unit}
