@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useCallback } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -15,22 +15,32 @@ export type ActiveSection =
   | "multi-cycle-trends"
   | "kinetic-analysis"
   | "insights"
-  | "theory-models";
+  | "references";
 
 interface NavigationContextType {
   activeSection: ActiveSection;
   setActiveSection: (section: ActiveSection) => void;
+  scrollToSection: (section: ActiveSection) => void;
 }
 
 const NavigationContext = createContext<NavigationContextType>({
   activeSection: "dashboard",
   setActiveSection: () => {},
+  scrollToSection: () => {},
 });
 
 export const useNavigation = () => useContext(NavigationContext);
 
 function App() {
   const [activeSection, setActiveSection] = useState<ActiveSection>("dashboard");
+
+  const scrollToSection = useCallback((section: ActiveSection) => {
+    setActiveSection(section);
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   const sidebarStyle = {
     "--sidebar-width": "16rem",
@@ -40,7 +50,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <NavigationContext.Provider value={{ activeSection, setActiveSection }}>
+        <NavigationContext.Provider value={{ activeSection, setActiveSection, scrollToSection }}>
           <SidebarProvider style={sidebarStyle as React.CSSProperties}>
             <div className="flex h-screen w-full">
               <AppSidebar />

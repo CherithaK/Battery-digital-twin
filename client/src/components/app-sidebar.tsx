@@ -59,10 +59,10 @@ const insightItems: { title: string; section: ActiveSection; icon: typeof Trendi
 ];
 
 export function AppSidebar() {
-  const { activeSection, setActiveSection } = useNavigation();
+  const { activeSection, scrollToSection } = useNavigation();
 
   const handleNavClick = (section: ActiveSection) => {
-    setActiveSection(section);
+    scrollToSection(section);
   };
 
   return (
@@ -148,16 +148,16 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  onClick={() => handleNavClick("theory-models")}
+                  onClick={() => handleNavClick("references")}
                   className={
-                    activeSection === "theory-models"
+                    activeSection === "references"
                       ? "bg-sidebar-accent text-sidebar-accent-foreground"
                       : ""
                   }
-                  data-testid="nav-theory-models"
+                  data-testid="nav-references"
                 >
                   <BookOpen className="w-4 h-4" />
-                  <span>Theory & Models</span>
+                  <span>References</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
