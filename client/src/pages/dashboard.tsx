@@ -11,7 +11,6 @@ import { BMSIntelligencePanel } from "@/components/bms-intelligence-panel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { FileText, AlertCircle, BookOpen, FlaskConical, TrendingUp, Brain } from "lucide-react";
 import { useNavigation, type ActiveSection } from "@/App";
@@ -362,7 +361,7 @@ export default function Dashboard() {
   const hasData = analysisResult !== null;
 
   return (
-    <ScrollArea className="h-full" ref={scrollContainerRef as React.RefObject<HTMLDivElement>}>
+    <div className="h-full overflow-y-auto" ref={scrollContainerRef}>
       <div className="p-6 lg:p-8 space-y-8">
         <section id="dashboard" ref={dashboardRef} className="scroll-mt-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -595,6 +594,6 @@ export default function Dashboard() {
           <ReferencesSection />
         </section>
       </div>
-    </ScrollArea>
+    </div>
   );
 }
