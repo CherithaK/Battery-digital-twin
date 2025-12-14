@@ -1,0 +1,203 @@
+🔒 COMBINED REPLIT FIX PROMPT
+Sidebar Navigation + Reference Integrity + UI Confidence Cleanup (MANDATORY)
+
+You are working on an existing, functional project named:
+
+Battery Health Digital Twin
+
+This project is already:
+
+scientifically correct
+
+visually polished
+
+presentation and viva safe
+
+Your task is navigation correction and UI clarity only.
+
+You must NOT redesign the UI, rename sections, change metrics, or modify any analytical or electrochemical logic.
+
+🎯 OBJECTIVES
+
+Fix sidebar navigation so the app behaves as a true single-page analytical dashboard
+
+Preserve and correctly integrate the Reference tab, as it is academically important
+
+Remove any explicit ML confidence / training data similarity messaging from the main UI
+
+This is not a feature-addition task.
+
+🚫 ABSOLUTE NON-NEGOTIABLE RULES
+
+Do NOT introduce client-side routing
+
+Do NOT use navigate, Link, or page switching
+
+Do NOT create new pages
+
+Do NOT duplicate sections
+
+Do NOT remove or rewrite existing components
+
+Do NOT change charts, calculations, equations, or data flow
+
+Do NOT alter scientific outputs or numerical results
+
+✅ REQUIRED BEHAVIOR (MANDATORY)
+1️⃣ Single-Page Architecture (STRICT)
+
+All major sections must exist once and only once on the same page and must always remain mounted:
+
+Dashboard
+
+Electrochemical Analysis
+
+System Diagnostics
+
+Multi-Cycle Trends
+
+Kinetic Analysis
+
+Insights
+
+References (IMPORTANT – must NOT be removed or hidden)
+
+No conditional rendering. No duplication.
+
+2️⃣ Sidebar = Section Controller (NOT navigation)
+
+Sidebar items must:
+
+Scroll smoothly to the corresponding section
+OR
+
+Toggle analytical focus within the same page
+
+Sidebar clicks must never:
+
+reload content
+
+change routes
+
+show empty or placeholder views
+
+The sidebar represents analytical focus selection, not page navigation.
+
+3️⃣ Section Anchors (MANDATORY)
+
+Each major section must be wrapped exactly once using semantic anchors:
+
+<section id="dashboard">...</section>
+<section id="electrochemical">...</section>
+<section id="diagnostics">...</section>
+<section id="multicycle">...</section>
+<section id="kinetic">...</section>
+<section id="insights">...</section>
+<section id="references">...</section>
+
+
+The References section must be scroll-accessible from the sidebar like all other sections.
+
+4️⃣ Sidebar Click Logic (MANDATORY)
+
+Replace any routing or page-switching logic with smooth scroll only:
+
+const scrollToSection = (id) => {
+  document.getElementById(id)?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+};
+
+
+Every sidebar item must call this function with its corresponding section ID.
+
+5️⃣ Active Sidebar Highlight (REQUIRED POLISH)
+
+Sidebar must visually highlight the section currently in view
+
+Implement using IntersectionObserver, not manual scroll math
+
+Highlight must update:
+
+on scroll
+
+on sidebar click
+
+Highlight must reflect actual visible section, not last clicked item
+
+📚 REFERENCES TAB (CRITICAL INSTRUCTION)
+
+The References tab is academically important
+
+It must:
+
+remain visible in the sidebar
+
+scroll to a dedicated References section
+
+list citations, standards, or theoretical bases clearly
+
+Do NOT collapse, hide, minimize, or de-emphasize the References section
+
+This section supports viva and evaluation credibility
+
+🧹 UI CONFIDENCE CLEANUP (IMPORTANT)
+
+Remove any explicit labels or indicators such as:
+
+“ML Confidence”
+
+“Training Data Similarity”
+
+“Limited Training Data”
+
+This removal must be UI-only
+
+Do NOT delete or alter any underlying logic, checks, or calculations
+
+Do NOT introduce new warnings or replacement labels
+
+The UI should emphasize deterministic electrochemical analysis, not ML uncertainty.
+
+🧠 DESIGN INTENT (DO NOT IGNORE)
+
+This project represents a continuous electrochemical digital twin.
+
+All analytical layers coexist on one page
+
+Sidebar controls focus, not application state
+
+References provide theoretical grounding, not optional metadata
+
+This intent must be visually and behaviorally clear.
+
+🧪 FINAL VERIFICATION CHECKLIST (YOU MUST VERIFY)
+
+Before finishing, confirm:
+
+Sidebar clicks only scroll or refocus sections
+
+No routing exists anywhere in the project
+
+No section appears more than once
+
+References section is accessible and intact
+
+Sidebar highlight follows scroll correctly
+
+UI looks identical except navigation behavior
+
+All charts, metrics, and analyses render exactly as before
+
+✅ DELIVERABLE
+
+A fully working single-page Battery Health Digital Twin where:
+
+sidebar controls analytical focus
+
+navigation is stable and intuitive
+
+references are clearly accessible
+
+UI is clean, confident, and viva-safe
