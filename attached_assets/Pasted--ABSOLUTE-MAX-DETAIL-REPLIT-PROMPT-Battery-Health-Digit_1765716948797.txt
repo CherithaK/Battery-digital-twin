@@ -1,0 +1,538 @@
+🔒 ABSOLUTE-MAX DETAIL REPLIT PROMPT
+Battery Health Digital Twin
+Electrochemical + ML + BMS-Grade Intelligence Digital Twin
+
+(SI-Correct, Research-Grade, Presentation-Safe)
+
+Paste everything below exactly.
+Do not shorten.
+Do not paraphrase.
+Do not merge with other prompts.
+
+0. PROJECT IDENTITY (LOCK THIS FIRST)
+
+You are building a new web application from scratch named:
+
+Battery Health Digital Twin
+
+This is a research-grade Cyclic Voltammetry (CV) digital twin implementing the
+estimation, diagnostics, and decision-support layer of a Battery Management System (BMS).
+
+This system does NOT perform hardware control, protection, or balancing.
+
+It focuses exclusively on BMS intelligence, i.e.:
+
+State estimation
+
+Degradation diagnostics
+
+Operating envelope awareness
+
+Advisory decision support
+
+This project is suitable for:
+
+academic presentation
+
+project evaluation
+
+viva defense
+
+This is NOT a demo, animation, or heuristic scoring app.
+
+There is no existing code in this Replit.
+
+1. UI & UX — STRICT PRESENTATION CONSTRAINTS
+
+The frontend UI must closely resemble a professional Battery Health Digital Twin / BMS analytics dashboard, similar to tools used in battery R&D and electrochemistry labs.
+
+The UI MUST contain:
+
+• Left sidebar navigation
+• Main dashboard view
+• Metric cards (SoH, degradation, stability)
+• CV voltammogram plot
+• Multi-cycle trend plots
+• Health / degradation gauge
+• 3D electrochemical cell digital twin
+
+The UI MUST NOT:
+
+• invent artistic layouts
+• introduce experimental UI metaphors
+• hide metrics behind toggles
+• aggressively highlight confidence or uncertainty
+
+Confidence exists internally, not as a dominant visual element.
+
+The UI must look clean, stable, and professional, suitable for demonstration.
+
+2. TECHNOLOGY STACK (NON-NEGOTIABLE)
+Frontend
+
+• React + TypeScript
+• Charting library for CV + trends
+• React Three Fiber / Three.js for 3D
+
+Backend
+
+• Python + FastAPI
+• NumPy, SciPy (numerics)
+• scikit-learn (ML)
+• Deterministic, auditable pipelines
+
+No black-box ML libraries.
+No uncontrolled randomness.
+
+3. DATA INGESTION — CSV CONTRACT (DEFENSIVE)
+Accepted CSV (single file only)
+cycle, voltage, current
+
+Parsing Rules
+
+• Read row-by-row
+• Preserve ordering
+• If cycle column missing → treat all rows as cycle = 1
+• Enforce minPointsPerCycle = 10
+
+Invalid cycles:
+
+skipped
+
+logged as warnings
+
+never crash
+
+never throw
+
+Internal Representation (ALWAYS EXISTS)
+cycles = {
+  cycle_id: {
+    voltage: float[],
+    rawCurrent_SI: float[],       # assumed Amps
+    normalizedCurrent: float[],   # µA-scaled
+    scanDirection: int[]          # +1 forward, −1 reverse
+  }
+}
+
+
+All downstream logic must tolerate missing or null values gracefully.
+
+4. CURRENT HANDLING — SI FIRST, ALWAYS
+Fundamental Rule
+
+All input current values are assumed to be SI units (Amperes).
+
+No unit guessing.
+No user toggles.
+No heuristics.
+
+This aligns with:
+
+electrochemical equations
+
+numerical stability
+
+ML correctness
+
+Normalization (Numerical Conditioning Only)
+
+For computation and plotting:
+
+I_normalized = I_SI × 1e6   # A → µA
+
+
+This is scaling, not inference.
+
+Sanity Safeguards (Silent)
+
+If current magnitude is physically impossible for CV:
+
+• |I| > 10 A → treat input as mislabeled µA → rescale
+• |I| < 1e-9 A → treat input as mislabeled µA → rescale
+
+No health penalty.
+No confidence penalty.
+No UI alerts.
+
+🚨 Raw SI current must never reach:
+• peak detection
+• electrochemical equations
+• ML features
+• health scoring
+• UI
+
+5. SCAN DIRECTION DETECTION — GLOBAL ONLY
+
+Determine scan direction per cycle using global voltage monotonicity, not derivatives.
+
+Rules:
+
+• Increasing voltage segment → forward scan
+• Decreasing voltage segment → reverse scan
+
+Oxidation and reduction peaks must originate from opposite scans.
+
+If scan direction is ambiguous:
+
+• Extract peaks
+• Mark pairing confidence low
+• Disable:
+– temporal trends
+– healing inference
+– ML confidence amplification
+
+6. PER-CYCLE ELECTROCHEMICAL ANALYSIS (PHYSICS FIRST)
+
+Each cycle is analyzed independently.
+
+6.1 Peak Extraction
+
+• Ipa, Epa → forward scan maximum
+• Ipc, Epc → reverse scan minimum
+
+No merged curves.
+No shared peaks.
+
+6.2 Electrochemical Models (MANDATORY)
+(1) Randles–Ševčík (Diffusion Proxy)
+𝐼
+𝑝
+=
+0.4463
+ 
+𝑛
+𝐹
+𝐴
+𝐶
+(
+𝑛
+𝐹
+𝑣
+𝐷
+𝑅
+𝑇
+)
+1
+/
+2
+I
+p
+	​
+
+=0.4463nFAC(
+RT
+nFvD
+	​
+
+)
+1/2
+
+Use relative trends only to infer diffusion degradation.
+
+(2) Peak Separation
+Δ
+𝐸
+𝑝
+=
+∣
+𝐸
+𝑝
+𝑎
+−
+𝐸
+𝑝
+𝑐
+∣
+(
+mV
+)
+ΔE
+p
+	​
+
+=∣E
+pa
+	​
+
+−E
+pc
+	​
+
+∣(mV)
+
+Clamp for scoring & ML:
+
+ΔEp ≤ 300 mV
+
+(3) Reversibility (NON-LINEAR)
+𝑅
+=
+∣
+log
+⁡
+(
+𝐼
+𝑝
+𝑎
+𝐼
+𝑝
+𝑐
+)
+∣
+R=
+	​
+
+log(
+I
+pc
+	​
+
+I
+pa
+	​
+
+	​
+
+)
+	​
+
+
+Linear deviation is forbidden.
+
+(4) Butler–Volmer Kinetics (Charge-Transfer Proxy)
+𝑖
+=
+𝑖
+0
+[
+𝑒
+𝛼
+𝑛
+𝐹
+𝜂
+/
+𝑅
+𝑇
+−
+𝑒
+−
+(
+1
+−
+𝛼
+)
+𝑛
+𝐹
+𝜂
+/
+𝑅
+𝑇
+]
+i=i
+0
+	​
+
+[e
+αnFη/RT
+−e
+−(1−α)nFη/RT
+]
+
+Use slope near equilibrium to infer kinetic degradation.
+
+(5) Capacitive vs Faradaic Separation
+
+Estimate double-layer contribution using scan-rate behavior.
+
+(6) Noise Power
+
+Compute RMS noise normalized by peak current.
+
+Noise affects confidence, not health directly.
+
+(7) SEI Growth Model (Physically Constrained)
+
+• SEI thickness ∈ [1, 100] nm
+• Growth saturates asymptotically
+• Derived from normalized current decay
+
+7. MULTI-CYCLE COMPATIBILITY CHECK (BMS-CRITICAL)
+
+Before any trend, healing, or ML:
+
+Cycles must share:
+• similar voltage window
+• same scan pattern
+• sufficient point density
+
+If incompatible:
+• compute per-cycle metrics only
+• do NOT compute slopes
+• reduce confidence
+• never fabricate trends
+
+8. TEMPORAL FEATURES (ONLY WHEN VALID)
+
+Compute:
+• ΔEp slope
+• Ipa decay
+• Ipc decay
+• Peak potential shift
+• Reversibility drift
+• Noise growth
+• Stability index
+• Consistency score
+
+9. MACHINE LEARNING PIPELINE (BMS-GRADE)
+Feature Vector
+
+Per-cycle:
+• ΔEp
+• log(Ipa/Ipc)
+• Noise index
+• SEI thickness
+• Charge-transfer proxy
+
+Temporal:
+• Slopes
+• Variances
+• Stability index
+
+Model
+
+• Gradient Boosting Regressor
+OR
+• Temporal regression with cycle index
+
+ML Outputs (BMS ESTIMATES)
+
+• State of Health (SoH)
+• Degradation rate
+• Remaining Useful Life (RUL) proxy
+
+ML Safety
+
+• Normalize features
+• Clamp ranges
+• Detect out-of-distribution
+• Reduce confidence if OOD
+
+ML augments physics, never replaces it.
+
+10. HEALTH SCORE FORMULATION (ROBUST, BMS-SAFE)
+
+Health ∈ [20%, 100%]
+
+Rules:
+• No single metric dominates
+• Severe degradation requires consistency
+• Stable cycles preserve health
+
+Health is weighted fusion of:
+• reversibility
+• kinetics
+• SEI growth
+• temporal stability
+
+11. BMS-GRADE SYSTEM-LEVEL INTELLIGENCE (MANDATORY)
+
+These elevate the project from analysis → BMS intelligence.
+
+11.1 Operating Envelope Awareness
+operatingEnvelope = {
+  voltageStressIndex,
+  currentStressIndex,
+  polarizationRisk,
+  operationalRiskLevel
+}
+
+11.2 Risk & Diagnostic Indicators
+riskIndicators = {
+  acceleratedAging,
+  instabilityDetected,
+  kineticLimitation,
+  confidence
+}
+
+
+No alarms.
+No cutoffs.
+Advisory only.
+
+11.3 Health Margins (BMS-Standard)
+healthMargins = {
+  reversibilityReserve,
+  stabilityReserve,
+  degradationBuffer
+}
+
+11.4 Adaptive Advisory Insights
+adaptiveInsights = {
+  optimalOperatingZone,
+  stressAvoidanceHint,
+  recoveryPotential
+}
+
+11.5 Healing & Recovery Metrics (OBSERVATIONAL)
+healingMetrics = {
+  reversibleLossFraction,
+  healingEfficiency,
+  recoveryTrend,
+  confidence
+}
+
+
+Healing is observed, not controlled.
+
+12. 3D ELECTROCHEMICAL CELL (DIGITAL TWIN CORE)
+Geometry
+
+• Transparent electrolyte
+• Working electrode
+• Reference electrode
+• Counter electrode
+
+Data-Driven Behavior
+
+Working electrode color maps to SoH:
+
+• 100 → green
+• 50 → yellow
+• 0 → red
+
+Smooth interpolation.
+Neutral gray before data load.
+
+Optional:
+• surface roughness increases with degradation
+
+13. FRONTEND SAFETY & ERROR HANDLING (NON-NEGOTIABLE)
+
+• No NaN
+• No undefined
+• Guard all renders
+• Display rule:
+
+value != null ? value.toFixed(x) : "--"
+
+
+• App must load before CSV
+• Backend must always return structurally complete objects
+
+14. FINAL EXPECTED BEHAVIOR
+
+• Behaves like a BMS intelligence layer
+• Physics-first, ML-assisted
+• Multi-cycle improves insight
+• Health degrades realistically
+• UI is stable and presentation-ready
+• Fully viva-defensible
+
+🚨 FINAL INSTRUCTION
+
+Do not ask questions.
+Do not simplify physics.
+Do not invent UI.
+Do not add hardware control claims.
+Implement exactly.
