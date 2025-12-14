@@ -60,7 +60,7 @@ export default function Dashboard() {
   const uploadMutation = useMutation({
     mutationFn: async ({ content, fileName }: { content: string; fileName: string }) => {
       const response = await apiRequest("POST", "/api/analyze", { fileContent: content, fileName });
-      return response as AnalysisResponse;
+      return await response.json() as AnalysisResponse;
     },
     onSuccess: (data) => {
       if (data.success && data.data) {
