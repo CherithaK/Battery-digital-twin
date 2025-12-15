@@ -28,7 +28,7 @@ export async function registerRoutes(
         return res.status(400).json(response);
       }
 
-      const result = analyzeCSV(fileContent, fileName);
+      const result = await analyzeCSV(fileContent, fileName);
       await storage.storeAnalysis(result);
 
       const response: AnalysisResponse = {

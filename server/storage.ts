@@ -9,6 +9,11 @@ import type {
   BMSIntelligence,
   RawDataPoint,
 } from "@shared/schema";
+import {
+  predictBatteryHealth,
+  checkModelAvailable,
+  type FeatureVector,
+} from "./ml_inference";
 
 export interface IStorage {
   storeAnalysis(result: AnalysisResult): Promise<void>;
@@ -218,8 +223,8 @@ export function computeElectrochemicalMetrics(cycle: CycleData): Electrochemical
   const noiseIndex = peakMagnitude > 0 ? rms / peakMagnitude : null;
 
   let seiThickness: number | null = null;
-  if (peaks.IpaDecay != null || peaks.Ipa != null) {
-    const decayFactor = peaks.Ipa != null ? 1 - Math.min(Math.abs(peaks.Ipa) / 100, 0.9) : 0.5;
+  if (peaks.Ipa != null) {
+    const decayFactor = 1 - Math.min(Math.abs(peaks.Ipa) / 100, 0.9);
     seiThickness = Math.min(100, Math.max(1, 10 + decayFactor * 50 + cycle.cycleId * 0.5));
   } else {
     seiThickness = Math.min(100, Math.max(1, 10 + cycle.cycleId * 0.5));
@@ -299,7 +304,7 @@ export function computeTemporalFeatures(metrics: ElectrochemicalMetrics[]): Temp
   };
 }
 
-export function computeMLEstimates(
+function computeWeightedFusionFallback(
   metrics: ElectrochemicalMetrics[],
   temporal: TemporalFeatures | null
 ): MLEstimates {
@@ -363,6 +368,66 @@ export function computeMLEstimates(
     confidence,
     isOutOfDistribution,
   };
+}
+
+function buildFeatureVector(
+  metrics: ElectrochemicalMetrics[],
+  temporal: TemporalFeatures | null
+): FeatureVector {
+  const latestMetrics = metrics[metrics.length - 1];
+  const peaks = latestMetrics.peaks;
+
+  return {
+    deltaEp: peaks.deltaEp ?? 59,
+    reversibilityIndex: peaks.reversibility ?? 0.1,
+    noiseIndex: latestMetrics.noiseIndex ?? 0.05,
+    seiThickness: latestMetrics.seiThickness ?? 10,
+    ipaDecayRate: temporal?.IpaDecayRate != null ? Math.abs(temporal.IpaDecayRate) : 0.5,
+    kineticsProxy: latestMetrics.chargeTransferProxy != null
+      ? Math.max(0.2, Math.min(1, latestMetrics.chargeTransferProxy / 10))
+      : 0.7,
+    diffusionProxy: latestMetrics.diffusionProxy != null
+      ? Math.max(0.2, Math.min(1, latestMetrics.diffusionProxy / 100))
+      : 0.7,
+    stabilityIndex: temporal?.stabilityIndex ?? 0.8,
+    consistencyScore: temporal?.consistencyScore ?? 0.9,
+  };
+}
+
+export async function computeMLEstimates(
+  metrics: ElectrochemicalMetrics[],
+  temporal: TemporalFeatures | null
+): Promise<MLEstimates> {
+  if (metrics.length === 0) {
+    return {
+      stateOfHealth: 50,
+      degradationRate: 0,
+      remainingUsefulLife: null,
+      confidence: 0.3,
+      isOutOfDistribution: true,
+    };
+  }
+
+  if (checkModelAvailable()) {
+    try {
+      const features = buildFeatureVector(metrics, temporal);
+      const prediction = await predictBatteryHealth(features);
+
+      if (prediction) {
+        return {
+          stateOfHealth: prediction.stateOfHealth,
+          degradationRate: prediction.degradationRate,
+          remainingUsefulLife: prediction.remainingUsefulLife,
+          confidence: prediction.confidence,
+          isOutOfDistribution: prediction.isOutOfDistribution,
+        };
+      }
+    } catch (err) {
+      console.warn("[ML] Prediction failed, using fallback:", err);
+    }
+  }
+
+  return computeWeightedFusionFallback(metrics, temporal);
 }
 
 export function computeBMSIntelligence(
@@ -474,7 +539,7 @@ export function computeBMSIntelligence(
   };
 }
 
-export function analyzeCSV(content: string, fileName: string): AnalysisResult {
+export async function analyzeCSV(content: string, fileName: string): Promise<AnalysisResult> {
   const sessionId = randomUUID();
   const uploadTimestamp = new Date().toISOString();
 
@@ -514,7 +579,8 @@ export function analyzeCSV(content: string, fileName: string): AnalysisResult {
   const allWarnings = [...warnings];
 
   const cycles: CycleData[] = [];
-  for (const [cycleId, points] of grouped) {
+  for (const entry of Array.from(grouped.entries())) {
+    const [cycleId, points] = entry;
     const processed = processCycle(cycleId, points);
     if (processed) {
       cycles.push(processed);
@@ -527,7 +593,7 @@ export function analyzeCSV(content: string, fileName: string): AnalysisResult {
 
   const electrochemicalMetrics = cycles.map((c) => computeElectrochemicalMetrics(c));
   const temporalFeatures = computeTemporalFeatures(electrochemicalMetrics);
-  const mlEstimates = computeMLEstimates(electrochemicalMetrics, temporalFeatures);
+  const mlEstimates = await computeMLEstimates(electrochemicalMetrics, temporalFeatures);
   const bmsIntelligence = computeBMSIntelligence(electrochemicalMetrics, temporalFeatures, mlEstimates);
 
   return {
