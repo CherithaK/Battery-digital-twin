@@ -1,0 +1,30 @@
+{
+  "feature_importance": {
+    "reversibility_index": 0.3847,
+    "delta_ep": 0.2407,
+    "sei_thickness": 0.1235,
+    "diffusion_proxy": 0.0829,
+    "consistency_score": 0.0742,
+    "kinetics_proxy": 0.0452,
+    "noise_index": 0.0348,
+    "stability_index": 0.0119,
+    "ipa_decay_rate": 0.0022
+  },
+  "feature_order": [
+    "delta_ep",
+    "reversibility_index",
+    "noise_index",
+    "sei_thickness",
+    "ipa_decay_rate",
+    "kinetics_proxy",
+    "diffusion_proxy",
+    "stability_index",
+    "consistency_score"
+  ],
+  "model_metrics": {
+    "train_r2": 0.9994,
+    "test_r2": 0.9976,
+    "test_rmse": 1.0051,
+    "test_mae": 0.7417
+  }
+}
