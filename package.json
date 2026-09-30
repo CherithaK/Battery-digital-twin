@@ -8,6 +8,7 @@
     "build": "tsx script/build.ts",
     "start": "NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
+    "test:sensor": "node --import tsx --test server/sensor_diagnostics.test.ts",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {

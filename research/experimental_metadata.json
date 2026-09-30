@@ -1,0 +1,24 @@
+{
+  "source_csv": "attached_assets/14,12csv_1765724360390.csv",
+  "provenance": "Project team reports that the 21 current-potential values came from a real cyclic voltammetry experiment; instrument export and log are unavailable.",
+  "confirmed_from_file": {
+    "point_count": 21,
+    "voltage_column": "voltage",
+    "voltage_unit": "V (used by project analysis; original header has no unit)",
+    "current_column": "current",
+    "current_unit": null,
+    "timestamp_column": null
+  },
+  "team_recollection_unverified": {
+    "temperature": "approximately room temperature",
+    "electrodes_present": ["graphite", "platinum", "silver/silver-chloride (Ag/AgCl)"],
+    "electrode_roles": null,
+    "scan_rate": null,
+    "instrument_model": null,
+    "cell_or_material": null,
+    "electrolyte": null
+  },
+  "analysis_assumption": {
+    "current_unit": "A, provisional; confirm against original instrument export before quantitative physical interpretation"
+  }
+}

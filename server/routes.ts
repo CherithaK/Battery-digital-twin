@@ -43,7 +43,7 @@ export async function registerRoutes(
         success: false,
         error: error instanceof Error ? error.message : "Unknown error occurred",
       };
-      return res.status(500).json(response);
+      return res.status(error instanceof Error ? 400 : 500).json(response);
     }
   });
 

@@ -13,8 +13,6 @@ export type ActiveSection =
   | "electrochemical-analysis"
   | "system-diagnostics"
   | "multi-cycle-trends"
-  | "kinetic-analysis"
-  | "insights"
   | "references";
 
 interface NavigationContextType {
@@ -58,7 +56,7 @@ function App() {
                 <header className="flex items-center justify-between gap-4 px-4 h-14 border-b border-border bg-background shrink-0 z-50">
                   <div className="flex items-center gap-3">
                     <SidebarTrigger data-testid="button-sidebar-toggle" />
-                    <span className="text-sm font-medium hidden sm:block">Battery Health Digital Twin</span>
+                    <span className="text-sm font-medium hidden sm:block">CV Sensor Evidence</span>
                   </div>
                   <ThemeToggle />
                 </header>
