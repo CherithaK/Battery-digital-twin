@@ -144,7 +144,7 @@ export function CSVUpload({
                   {fileName ? fileName : "Drop CSV file here or click to upload"}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Expected format: cycle, voltage, current
+                  Expected: voltage_v and current_a or current_ua
                 </p>
               </>
             )}

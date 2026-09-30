@@ -14,27 +14,25 @@ import {
   LayoutDashboard,
   Activity,
   AlertTriangle,
-  Battery,
   TrendingUp,
-  Zap,
-  Lightbulb,
+  ScanLine,
   BookOpen,
 } from "lucide-react";
 import { useNavigation, type ActiveSection } from "@/App";
 
 const mainNavItems: { title: string; section: ActiveSection; icon: typeof LayoutDashboard }[] = [
   {
-    title: "Dashboard",
+    title: "Overview",
     section: "dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Electrochemical Analysis",
+    title: "CV Analysis",
     section: "electrochemical-analysis",
     icon: Activity,
   },
   {
-    title: "System Diagnostics",
+    title: "Quality Checks",
     section: "system-diagnostics",
     icon: AlertTriangle,
   },
@@ -42,19 +40,9 @@ const mainNavItems: { title: string; section: ActiveSection; icon: typeof Layout
 
 const insightItems: { title: string; section: ActiveSection; icon: typeof TrendingUp }[] = [
   {
-    title: "Multi-Cycle Trends",
+    title: "Acquisition Context",
     section: "multi-cycle-trends",
     icon: TrendingUp,
-  },
-  {
-    title: "Kinetic Analysis",
-    section: "kinetic-analysis",
-    icon: Zap,
-  },
-  {
-    title: "Insights",
-    section: "insights",
-    icon: Lightbulb,
   },
 ];
 
@@ -70,13 +58,13 @@ export function AppSidebar() {
       <SidebarHeader className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary">
-            <Battery className="w-5 h-5 text-primary-foreground" />
+            <ScanLine className="w-5 h-5 text-primary-foreground" />
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-semibold text-sidebar-foreground">
-              Digital Twin
+              CV Sensor Study
             </span>
-            <span className="text-xs text-muted-foreground">Battery Health</span>
+            <span className="text-xs text-muted-foreground">Research prototype</span>
           </div>
         </div>
       </SidebarHeader>
@@ -168,10 +156,10 @@ export function AppSidebar() {
       <SidebarFooter className="p-4 border-t border-sidebar-border">
         <div className="px-3">
           <p className="text-xs text-muted-foreground">
-            BMS-Inspired Intelligence Layer
+            Observed signal diagnostics
           </p>
           <p className="text-xs text-muted-foreground opacity-70">
-            v1.0.0 — Research Grade
+            Validation pending
           </p>
         </div>
       </SidebarFooter>

@@ -38,17 +38,12 @@ export function CVPlot({
       return { forwardPoints: [], reversePoints: [], bounds: { minV: 0, maxV: 1, minI: -1, maxI: 1 } };
     }
 
-    const forward: { v: number; i: number }[] = [];
-    const reverse: { v: number; i: number }[] = [];
-
-    for (let j = 0; j < cycleData.voltage.length; j++) {
-      const point = { v: cycleData.voltage[j], i: cycleData.normalizedCurrent[j] };
-      if (cycleData.scanDirection[j] === 1) {
-        forward.push(point);
-      } else {
-        reverse.push(point);
-      }
-    }
+    const points = cycleData.voltage.map((v, j) => ({ v, i: cycleData.normalizedCurrent[j] }));
+    const firstDirection = cycleData.scanDirection.find(d => d !== 0) ?? 0;
+    const reversal = cycleData.scanDirection.findIndex((d, j) => j > 1 && d !== 0 && d !== firstDirection);
+    const turn = reversal < 0 ? points.length - 1 : reversal - 1;
+    const forward = points.slice(0, turn + 1);
+    const reverse = reversal < 0 ? [] : points.slice(turn);
 
     const allV = cycleData.voltage;
     const allI = cycleData.normalizedCurrent;
@@ -85,8 +80,7 @@ export function CVPlot({
 
   const createPath = (points: { v: number; i: number }[]) => {
     if (points.length === 0) return "";
-    const sortedPoints = [...points].sort((a, b) => a.v - b.v);
-    return sortedPoints
+    return points
       .map((p, idx) => `${idx === 0 ? "M" : "L"} ${scaleX(p.v)} ${scaleY(p.i)}`)
       .join(" ");
   };

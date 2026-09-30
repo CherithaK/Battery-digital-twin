@@ -1,0 +1,21 @@
+{
+  "source": "ml/training_data.csv",
+  "rows": 150,
+  "distinct_cycle_counts": 150,
+  "soh_range_percent": [
+    35.15,
+    100.0
+  ],
+  "feature_pearson_correlation_with_synthetic_soh": {
+    "delta_ep": -0.9942,
+    "reversibility_index": -0.9935,
+    "noise_index": -0.9881,
+    "sei_thickness": -0.9058,
+    "ipa_decay_rate": -0.9665,
+    "kinetics_proxy": 0.9844,
+    "diffusion_proxy": 0.992,
+    "stability_index": 0.9797,
+    "consistency_score": 0.9841
+  },
+  "generator_provenance": "ml/training_data_generator.py computes degradation_factor directly from each synthetic SoH label and uses it to construct most feature columns; this audit is descriptive, not independent validation."
+}

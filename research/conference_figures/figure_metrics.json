@@ -1,0 +1,25 @@
+{
+  "source": "team-reported experimental 21-point CV and synthetic training table",
+  "model_split_audit": {
+    "Random row split": {
+      "train_rows": 120,
+      "test_rows": 30,
+      "rmse_soh_points": 1.0071913111587691,
+      "mae_soh_points": 0.7460408333333338,
+      "r2": 0.997607753107981
+    },
+    "Later cycles held out": {
+      "train_rows": 120,
+      "test_rows": 30,
+      "rmse_soh_points": 14.71832959989306,
+      "mae_soh_points": 13.112817038480072,
+      "r2": -3.771964117115451
+    }
+  },
+  "experiment": {
+    "points": 21,
+    "reported_temperature": "approximately room temperature",
+    "scan_rate": "unknown",
+    "electrodes_present": "team reports graphite, platinum and Ag/AgCl; exact roles undocumented"
+  }
+}

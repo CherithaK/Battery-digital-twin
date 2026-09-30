@@ -4,3 +4,8 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+SINk2026_CV_Sensor_Evidence_validated/
+SINk2026_CV_Research_Expanded/
+SINk2026_Phase1_CV_Digital_Twin/
+research/figures/
+__pycache__/

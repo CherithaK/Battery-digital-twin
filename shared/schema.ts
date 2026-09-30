@@ -137,21 +137,33 @@ export interface AnalysisResult {
   validCycles: number;
   warnings: string[];
   
-  // Per-cycle data
   cycles: CycleData[];
-  electrochemicalMetrics: ElectrochemicalMetrics[];
-  
-  // Multi-cycle aggregates
-  temporalFeatures: TemporalFeatures | null;
-  
-  // ML estimates
-  mlEstimates: MLEstimates;
-  
-  // BMS intelligence
-  bmsIntelligence: BMSIntelligence;
-  
-  // Overall health score
-  healthScore: number;  // 20-100%
+  diagnostics: SensorDiagnostic[];
+  metadata: AcquisitionMetadata;
+}
+
+export interface AcquisitionMetadata {
+  cellId: string | null;
+  scanRateVS: number | null;
+  temperatureC: number | null;
+  referenceElectrode: string | null;
+  timestamp: string | null;
+}
+
+export interface SensorDiagnostic {
+  cycleId: number;
+  quality: "usable" | "limited" | "invalid";
+  reasons: string[];
+  anodicPeakUa: number | null;
+  anodicPeakV: number | null;
+  cathodicPeakUa: number | null;
+  cathodicPeakV: number | null;
+  peakSeparationMv: number | null;
+  peakCurrentRatio: number | null;
+  loopIntegralAV: number | null;
+  voltageMinV: number;
+  voltageMaxV: number;
+  pointCount: number;
 }
 
 // API Request/Response Types
